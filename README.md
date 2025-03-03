@@ -1,4 +1,4 @@
-# SG CO₂ Sensor V2
+# ESPHOME ESP32-C3 Super Mini CO2 OLED Sensor
 
 This project is designed to monitor indoor air quality by measuring CO₂ levels using a Sensirion [SDC41](https://www.sensirion.com/en/environmental-sensors/industrial-co2-sensor-sdc41/) sensor. The system is built on an [ESP32-C3 Super Mini](https://www.espboards.dev/esp32/esp32-c3-super-mini/) board running ESPHome firmware. Sensor data (CO₂, temperature, and humidity) is displayed in real time on an [OLED 128×64 display](https://www.adafruit.com/product/326) that shows a top-line reading, a Wi‑Fi connectivity icon, a bar indicator for CO₂ levels, a status word, and a small tag in the lower left corner.
 
