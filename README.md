@@ -1,6 +1,6 @@
 # ESPHOME ESP32-C3 Super Mini CO2 OLED Sensor
 
-This project is designed to monitor indoor air quality by measuring CO₂ levels using a Sensirion [SDC41](https://www.sensirion.com/en/environmental-sensors/industrial-co2-sensor-sdc41/) sensor. The system is built on an [ESP32-C3 Super Mini](https://www.espboards.dev/esp32/esp32-c3-super-mini/) board running ESPHome firmware. Sensor data (CO₂, temperature, and humidity) is displayed in real time on an [OLED 128×64 display](https://www.adafruit.com/product/326) that shows a top-line reading, a Wi‑Fi connectivity icon, a bar indicator for CO₂ levels, a status word, and a small tag in the lower left corner.
+This project is designed to monitor indoor air quality by measuring CO₂ levels using a Sensirion [SDC41](https://www.sensirion.com/en/environmental-sensors/industrial-co2-sensor-sdc41/) sensor. The system is built on an [ESP32-C3 Super Mini](https://www.espboards.dev/esp32/esp32-c3-super-mini/) board running ESPHome firmware. Sensor data (CO₂, temperature, and humidity) is displayed in real time on an [OLED 128×64 display](https://www.aliexpress.com/item/32896971385.html) that shows a top-line reading, a Wi‑Fi connectivity icon, a bar indicator for CO₂ levels, a status word, and a small tag in the lower left corner.
 
 ![Assembled Project](images/img_assembled.jpg)
 
@@ -66,7 +66,7 @@ Additionally, set the following substitution:
 
 - [Sensirion SDC41 CO₂ Sensor](https://www.sensirion.com/en/environmental-sensors/industrial-co2-sensor-sdc41/)
 - [ESP32-C3 Super Mini Board](https://www.espboards.dev/esp32/esp32-c3-super-mini/)
-- [SSD1306 OLED Display Module](https://www.adafruit.com/product/326)
+- [SSD1306 OLED Display Module](https://www.aliexpress.com/item/32896971385.html)
 
 ## Project Photos
 
