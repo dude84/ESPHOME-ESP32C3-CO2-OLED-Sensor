@@ -25,6 +25,10 @@ This project is designed to monitor indoor air quality by measuring CO₂ levels
   `3d_models/ESPHOME-ESP32C3-CO2-OLED-Sensor_Case_Top_Bottom.step`
 
 ## Hardware Connections
+  The idea behind this project was that anyone can put this together with basic soldering and 3d printing skills - there is no PCB there, only isolated fly-wires, as the wiring requires linking:
+  - I2C interface (SDA Software I2C uses GPIO02 on ESP32, SCL Software I2C uses GPIO03 on ESP32)
+  - 3.3v
+  - GND
 
 - **ESP32-C3 Super Mini Board:**  
   - **I2C Bus:**  
