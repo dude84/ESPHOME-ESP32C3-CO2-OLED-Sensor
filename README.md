@@ -59,7 +59,7 @@ Additionally, set the following substitution:
 ## Useful Links
 
 - [Sensirion SDC41 CO₂ Sensor](https://www.sensirion.com/en/environmental-sensors/industrial-co2-sensor-sdc41/)
-- [ESP32-C3 Super Mini Board](https://www.espressif.com/en/products/devkits/esp32-c3-devkitm-1)
+- [ESP32-C3 Super Mini Board](https://www.espboards.dev/esp32/esp32-c3-super-mini/)
 - [SSD1306 OLED Display Module](https://www.adafruit.com/product/326)
 
 ## License
