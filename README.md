@@ -70,9 +70,6 @@ Additionally, set the following substitution:
 
 ## Project Photos
 
-### Assembled Project
-![Assembled Project](images/img_assembled.jpg)
-
 ### Open Case
 ![Open Case](images/img_case_open.jpg)
 
