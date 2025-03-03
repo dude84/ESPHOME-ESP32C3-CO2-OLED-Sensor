@@ -2,6 +2,8 @@
 
 This project is designed to monitor indoor air quality by measuring CO₂ levels using a Sensirion [SDC41](https://www.sensirion.com/en/environmental-sensors/industrial-co2-sensor-sdc41/) sensor. The system is built on an [ESP32-C3 Super Mini](https://www.espboards.dev/esp32/esp32-c3-super-mini/) board running ESPHome firmware. Sensor data (CO₂, temperature, and humidity) is displayed in real time on an [OLED 128×64 display](https://www.adafruit.com/product/326) that shows a top-line reading, a Wi‑Fi connectivity icon, a bar indicator for CO₂ levels, a status word, and a small tag in the lower left corner.
 
+![Assembled Project](images/img_assembled.jpg)
+
 ## Features
 
 - **CO₂, Temperature, and Humidity Monitoring:**  
@@ -17,6 +19,10 @@ This project is designed to monitor indoor air quality by measuring CO₂ levels
 
 - **Configurable Thresholds and Home Assistant Integration:**  
   Thresholds for safe, warning, dangerous, and critical levels can be adjusted via Home Assistant. Other settings (such as brightness) may also be updated remotely.
+
+- **3D Printed Case:**  
+  The project includes a custom 3D printed case. STEP files for the case are available in the repository at:  
+  `3d_models/ESPHOME-ESP32C3-CO2-OLED-Sensor_Case_Top_Bottom.step`
 
 ## Hardware Connections
 
@@ -61,6 +67,17 @@ Additionally, set the following substitution:
 - [Sensirion SDC41 CO₂ Sensor](https://www.sensirion.com/en/environmental-sensors/industrial-co2-sensor-sdc41/)
 - [ESP32-C3 Super Mini Board](https://www.espboards.dev/esp32/esp32-c3-super-mini/)
 - [SSD1306 OLED Display Module](https://www.adafruit.com/product/326)
+
+## Project Photos
+
+### Assembled Project
+![Assembled Project](images/img_assembled.jpg)
+
+### Open Case
+![Open Case](images/img_case_open.jpg)
+
+### No Case
+![No Case](images/img_no_case.jpg)
 
 ## License
 
