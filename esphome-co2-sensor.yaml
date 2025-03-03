@@ -1,0 +1,247 @@
+substitutions:
+  tag: office
+  name: esphome-co2-sensor-${tag}
+  device_description: "ESPHOME CO2 Sensor (${tag})"
+
+esphome:
+  name: ${name}
+  comment: ${device_description}
+  friendly_name: esphome-co2-sensor-${tag}
+
+esp32:
+  board: esp32-c3-devkitm-1
+  framework:
+    type: arduino
+
+# Enable logging
+logger:
+
+api:
+  reboot_timeout: 0s
+  encryption:
+    key: !secret api_password
+
+ota:
+  - platform: esphome
+    password: !secret ota_password
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  fast_connect: true
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "esphome-co2-sensor-${tag} Fallback Hotspot"
+    password: !secret wifi_fallback_password
+
+captive_portal:
+
+web_server:
+  port: 80
+  version: 3
+
+i2c:
+  sda: GPIO2
+  scl: GPIO3
+  scan: true
+  id: i2c_bus
+
+# i2c device at address 0x3C //OLED 128x64
+# i2c device at address 0x62 //SDC41
+
+sensor:
+  - platform: scd4x
+    id: co2_sensor
+    i2c_id: i2c_bus
+    address: 0x62
+    co2:
+      name: "CO2"
+      id: co2
+    temperature:
+      name: "Temperature"
+      id: co2_temperature
+    humidity:
+      name: "Humidity"
+      id: co2_humidity
+    update_interval: 1s
+
+light:
+  - platform: binary
+    name: "LED"
+    output: led_output
+
+output:
+  - id: led_output
+    platform: gpio
+    inverted: True
+    pin: GPIO8
+
+# Expose threshold values as numbers so they appear in Home Assistant.
+number:
+  - platform: template
+    name: "Safe Threshold"
+    id: safe_threshold
+    optimistic: true
+    restore_value: true
+    initial_value: 800
+    min_value: 0
+    max_value: 5000
+    step: 1
+  - platform: template
+    name: "Warning Threshold"
+    id: warning_threshold
+    optimistic: true
+    restore_value: true
+    initial_value: 1200
+    min_value: 0
+    max_value: 5000
+    step: 1
+  - platform: template
+    name: "Dangerous Threshold"
+    id: dangerous_threshold
+    optimistic: true
+    restore_value: true
+    initial_value: 1600
+    min_value: 0
+    max_value: 5000
+    step: 1
+  - platform: template
+    name: "Critical Threshold"
+    id: critical_threshold
+    optimistic: true
+    restore_value: true
+    initial_value: 2500
+    min_value: 0
+    max_value: 5000
+    step: 1
+
+# If you want the status names to be configurable, you can use globals or text sensors.
+globals:
+  - id: safe_name
+    type: std::string
+    restore_value: no
+    initial_value: '"SAFE"'
+  - id: warning_name
+    type: std::string
+    restore_value: no
+    initial_value: '"WARNING"'
+  - id: dangerous_name
+    type: std::string
+    restore_value: no
+    initial_value: '"DANGER"'
+  - id: critical_name
+    type: std::string
+    restore_value: no
+    initial_value: '"CRITICAL"'
+
+# Use a custom TTF font from the web.
+font:
+  - file: "https://github.com/canonical/Ubuntu-Sans-Mono-fonts/raw/refs/heads/main/fonts/ttf/UbuntuSansMono-Medium.ttf"
+    id: font_large
+    size: 12
+  - file: "https://github.com/canonical/Ubuntu-Sans-Mono-fonts/raw/refs/heads/main/fonts/ttf/UbuntuSansMono-Medium.ttf"
+    id: font_small
+    size: 8
+
+display:
+  - platform: ssd1306_i2c
+    id: oled_display
+    model: "SSD1306 128x64"
+    address: 60
+    update_interval: 1s
+    brightness: 1.0
+    lambda: |-
+      // ---- Top Status Line (0-12px): Only CO2 reading using larger text ----
+      {
+        char buf[64];
+        sprintf(buf, "CO2 %d PPM", (int) id(co2).state);
+        it.print(0, 0, id(font_large), buf);
+      }
+
+      // ---- WiFi Icon (12x12) at the top right ----
+      if (WiFi.isConnected()) {
+        // Draw the WiFi icon bitmap at position (116, 0) (12x12 pixels).
+        static const uint8_t wifi_icon_bitmap[] = {
+          0xe0, 0x00,
+          0xfc, 0x00,
+          0x0e, 0x00,
+          0x03, 0x00,
+          0xe1, 0x80,
+          0xf8, 0xc0,
+          0x1c, 0xe0,
+          0x06, 0x60,
+          0x46, 0x20,
+          0xe3, 0x30,
+          0xf3, 0x30,
+          0x63, 0x30
+        };
+        for (int row = 0; row < 12; row++) {
+          for (int col = 0; col < 12; col++) {
+            int byte_index = row * 2 + (col / 8);
+            int bit = 7 - (col % 8);
+            if (wifi_icon_bitmap[byte_index] & (1 << bit)) {
+              it.draw_pixel_at(116 + col, row, COLOR_ON);
+            }
+          }
+        }
+      } else {
+        // If WiFi is not connected, display a simple "X" at the icon location.
+        it.print(116, 0, id(font_large), "X");
+      }
+
+      // ---- Bar Indicator for CO2 level ----
+      // Reserve area starting at y = 16 for the bar.
+      int bar_x = 0;
+      int bar_y = 16;
+      int bar_width = 128;
+      int bar_height = 20;
+      // Draw the outline of the bar.
+      it.rectangle(bar_x, bar_y, bar_width, bar_height, COLOR_ON);
+
+      // Retrieve thresholds from the number components.
+      int safe_val = (int) id(safe_threshold).state;
+      int warn_val = (int) id(warning_threshold).state;
+      int danger_val = (int) id(dangerous_threshold).state;
+      int crit_val = (int) id(critical_threshold).state;
+
+      // Map current CO2 reading to the bar width using the critical threshold.
+      float factor = (float) bar_width / crit_val;
+      int filled_width = (int)(id(co2).state * factor);
+      if (filled_width > bar_width) {
+        filled_width = bar_width;
+      }
+
+      // Draw the filled portion inside the bar (with a 1-pixel margin).
+      if (filled_width > 2) {
+        it.filled_rectangle(bar_x + 1, bar_y + 1, filled_width - 2, bar_height - 2, COLOR_ON);
+      }
+
+      // Draw vertical grid lines at thresholds (computed proportionally).
+      int safe_x = (int)(safe_val * factor);
+      int warning_x = (int)(warn_val * factor);
+      int dangerous_x = (int)(danger_val * factor);
+      it.line(bar_x + safe_x, bar_y, bar_x + safe_x, bar_y + bar_height, COLOR_ON);
+      it.line(bar_x + warning_x, bar_y, bar_x + warning_x, bar_y + bar_height, COLOR_ON);
+      it.line(bar_x + dangerous_x, bar_y, bar_x + dangerous_x, bar_y + bar_height, COLOR_ON);
+
+      // ---- Determine status word based on CO2 level and print below the bar ----
+      const char* status;
+      if (id(co2).state <= safe_val) {
+        status = id(safe_name).c_str();
+      } else if (id(co2).state <= warn_val) {
+        status = id(warning_name).c_str();
+      } else if (id(co2).state <= danger_val) {
+        status = id(dangerous_name).c_str();
+      } else {
+        status = id(critical_name).c_str();
+      }
+      // Center the status text below the bar (assume approx. 6px per character).
+      int text_width = strlen(status) * 6;
+      int status_x = (128 - text_width) / 2;
+      int status_print_y = bar_y + bar_height + 2;
+      it.print(status_x, status_print_y, id(font_large), status);
+
+      // ---- Bottom Left Corner: Display Tag ----
+      // Print the tag (from substitutions) in the bottom left corner using the small font.
+      it.print(0, 54, id(font_small), "${tag}");
