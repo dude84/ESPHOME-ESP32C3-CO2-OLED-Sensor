@@ -57,7 +57,7 @@ Before deploying the firmware, configure the following secrets in your ESPHome s
 - **WiFi Credentials:**  
   - `wifi_ssid` – Your WiFi network name.
   - `wifi_password` – Your WiFi network password.
-  - `wifi_fallback_password` – Device fallback password.
+  - `wifi_fallback_password` – Device fallback WiFi password.
 
 Additionally, set the following substitution:
 
