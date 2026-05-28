@@ -30,6 +30,16 @@ This project is designed to monitor indoor air quality by measuring CO₂ levels
   - 3.3v
   - GND
 
+### Wiring Schema
+
+![Wiring Schema](images/wiring_schema.png)
+
+All three modules share a single I²C bus plus 3.3V and GND. Wire colors above are illustrative — match by signal, not by the color of the wire you actually use.
+
+> **Note:** The pin *order* on the SSD1306 OLED varies by vendor (some are `GND/VCC/SCL/SDA`, others `VCC/GND/SCL/SDA`). Always go by the silkscreen labels on your actual board. Both the SCD41 and the OLED have onboard I²C pull-ups, so no external resistors are needed.
+
+### Pin Mapping
+
 - **ESP32-C3 Super Mini Board:**  
   - **I2C Bus:**  
     - **SDA:** Connected to GPIO2  
