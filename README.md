@@ -48,6 +48,8 @@ All three modules share a single I²C bus plus 3.3V and GND. Wire colors above a
   - **SDC41 Sensor:** Connected via I2C (address 0x62)
   - **LED Output:** Connected to GPIO8 for status indication
 
+> **Note:** GPIO2 is a boot strapping pin on the ESP32-C3. Although strapping pins should generally be used cautiously, GPIO2 has been tested in this design as the I²C SDA line and operates reliably with the SCD41 sensor. This choice intentionally preserves other GPIOs for future expansion, while avoiding GPIO8, which is typically shared with the onboard status LED.
+
 - **Sensirion SDC41 CO₂ Sensor:**  
   A high-precision sensor for CO₂, temperature, and humidity that communicates over I2C.
 
